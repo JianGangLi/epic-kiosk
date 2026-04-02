@@ -2,7 +2,11 @@ FROM python:3.12-slim
 
 WORKDIR /app
 
-# 预创建挂载点目录（解决 Docker 存储驱动挂载权限问题）
+# ✅ 换 apt 国内源（清华）
+RUN sed -i 's/deb.debian.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apt/sources.list.d/debian.sources && \
+    sed -i 's/security.debian.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apt/sources.list.d/debian.sources
+
+# 预创建挂载点目录
 RUN mkdir -p /app/data /app/app/volumes
 
 # 安装系统依赖
@@ -32,7 +36,14 @@ RUN apt-get update && apt-get install -y \
     xvfb \
     && rm -rf /var/lib/apt/lists/*
 
-# 安装 uv
+# ✅ 配置 pip 国内源
+RUN mkdir -p /root/.pip && \
+    printf "[global]\nindex-url = https://pypi.tuna.tsinghua.edu.cn/simple\nextra-index-url = https://mirrors.aliyun.com/pypi/simple\ntimeout = 120\ntrusted-host = pypi.tuna.tsinghua.edu.cn\n" > /root/.pip/pip.conf
+
+# ✅ Playwright 国内下载源
+ENV PLAYWRIGHT_DOWNLOAD_HOST=https://npmmirror.com/mirrors/playwright
+
+# 安装 uv（会自动走 pip 国内源）
 RUN pip install --no-cache-dir uv
 
 # 复制项目文件
@@ -51,13 +62,13 @@ RUN uv pip install --system --no-cache \
     beautifulsoup4 \
     lxml
 
-# 安装 Playwright 浏览器依赖
+# 安装 Playwright 浏览器
 RUN playwright install firefox && playwright install-deps firefox
 
-# 预装 Camoufox 浏览器 (避免每次运行时下载)
+# 预装 Camoufox 浏览器
 RUN python3 -c "from camoufox.sync_api import Camoufox; Camoufox(headless=True).__enter__().__exit__(None, None, None)" || true
 
-# 复制 worker 脚本
+# 复制 worker
 COPY worker.py ./
 
 USER root
