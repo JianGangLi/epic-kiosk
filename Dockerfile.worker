@@ -62,6 +62,7 @@ RUN uv pip install --system --no-cache \
 # 安装 Playwright 浏览器
 RUN playwright install firefox && playwright install-deps firefox
 
+ENV CAMOUFOX_CACHE_DIR=/camoufox
 # 预装 Camoufox 浏览器
 RUN python3 -c "from camoufox.sync_api import Camoufox; Camoufox(headless=True).__enter__().__exit__(None, None, None)" || true
 
