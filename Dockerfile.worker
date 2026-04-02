@@ -38,7 +38,7 @@ RUN apt-get update && apt-get install -y \
 
 
 # ✅ Playwright 国内下载源
-ENV PLAYWRIGHT_DOWNLOAD_HOST=https://npmmirror.com/mirrors/playwright
+ENV PLAYWRIGHT_DOWNLOAD_HOST=https://cdn.playwright.dev
 
 # 安装 uv（会自动走 pip 国内源）
 RUN pip install --no-cache-dir uv -i https://pypi.tuna.tsinghua.edu.cn/simple
