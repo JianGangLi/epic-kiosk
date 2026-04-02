@@ -227,8 +227,8 @@ configure_api_key() {
 
     # 检查是否已配置 API Key（排除注释行，只匹配实际配置）
     if [ -f "docker-compose.yml" ]; then
-        # 只匹配以 "- AI-API-KEY=" 开头的行，排除注释
-        current_key=$(grep -E "^\s*-\s+AI-API-KEY=" docker-compose.yml | head -1 | sed 's/.*AI-API-KEY=//')
+        # 只匹配以 "- AI_API_KEY=" 开头的行，排除注释
+        current_key=$(grep -E "^\s*-\s+AI_API_KEY=" docker-compose.yml | head -1 | sed 's/.*AI_API_KEY=//')
         # 提取实际值：处理 ${VAR:-default} 格式，只取 default 部分
         if [[ "$current_key" =~ ^\$\{[^}]+:-([^}]+)\}$ ]]; then
             current_key="${BASH_REMATCH[1]}"
@@ -239,7 +239,7 @@ configure_api_key() {
             use_existing=${use_existing:-Y}
 
             if [[ "$use_existing" =~ ^[Yy]$ ]]; then
-                AI-API-KEY="$current_key"
+                AI_API_KEY="$current_key"
                 return 0
             fi
         fi
@@ -265,7 +265,7 @@ configure_api_key() {
         confirm_key=${confirm_key:-Y}
 
         if [[ "$confirm_key" =~ ^[Yy] ]]; then
-            AI-API-KEY="$api_key"
+            AI_API_KEY="$api_key"
             break
         fi
     done
@@ -284,9 +284,9 @@ deploy_service() {
     if [ -f "docker-compose.yml" ]; then
         # 使用 sed 替换 API Key（兼容 macOS 和 Linux）
         if [[ "$OSTYPE" == "darwin"* ]]; then
-            sed -i '' "s|AI-API-KEY=sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx|AI-API-KEY=$AI-API-KEY|g" docker-compose.yml
+            sed -i '' "s|AI_API_KEY=sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx|AI_API_KEY=$AI_API_KEY|g" docker-compose.yml
         else
-            sed -i "s|AI-API-KEY=sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx|AI-API-KEY=$AI-API-KEY|g" docker-compose.yml
+            sed -i "s|AI_API_KEY=sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx|AI_API_KEY=$AI_API_KEY|g" docker-compose.yml
         fi
         print_success "API Key 已写入 docker-compose.yml"
     else

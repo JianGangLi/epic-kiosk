@@ -9,7 +9,7 @@
 #   1. Linux 一键部署: curl -fsSL https://raw.githubusercontent.com/10000ge10000/epic-kiosk/main/install.sh | bash
 #   2. 手动部署: 克隆项目 → 修改 API Key → docker compose up -d --build
 #
-# ⚠️ 必须修改: AI-API-KEY
+# ⚠️ 必须修改: AI_API_KEY
 #    获取地址: https://cloud.siliconflow.cn/i/OVI2n57p
 #
 # 📦 镜像说明：
@@ -88,7 +88,7 @@ services:
       # ⚠️⚠️⚠️ 必须配置 API Key ⚠️⚠️⚠️
       # ============================================================
       # 方式一：直接修改下方环境变量（不推荐，会暴露在配置文件中）
-      # 方式二：创建 .env 文件，添加 AI-API-KEY=sk-xxx（推荐）
+      # 方式二：创建 .env 文件，添加 AI_API_KEY=sk-xxx（推荐）
       # ============================================================
       # 获取步骤：
       # 1. 访问邀请链接: https://cloud.siliconflow.cn/i/OVI2n57p
@@ -96,7 +96,7 @@ services:
       # 3. 双方各得 ¥16 代金券（可领 1500+ 次任务）
       # 4. 在控制台创建 API Key
       # ============================================================
-      - AI-API-KEY=${AI-API-KEY:-sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx}
+      - AI_API_KEY=${AI_API_KEY:-sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx}
       # 环境变量（绕过父类验证器，无需修改）
       - GEMINI_API_KEY=not_used
       # ============================================================

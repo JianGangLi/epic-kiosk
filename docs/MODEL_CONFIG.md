@@ -101,7 +101,7 @@ CAPTCHA_MODEL_FALLBACK: str = Field(default="Qwen/Qwen2.5-VL-72B-Instruct")
 
 ```yaml
 environment:
-  - AI-API-KEY=sk-xxx  # 修改为你的 SiliconFlow API Key
+  - AI_API_KEY=sk-xxx  # 修改为你的 SiliconFlow API Key
 ```
 
 **重要说明**：

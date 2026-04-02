@@ -45,7 +45,7 @@
 编辑 `docker-compose.yml` 文件：
 
 ```yaml
-- AI-API-KEY=sk-xxxxxxxx  # 粘贴你的 API Key
+- AI_API_KEY=sk-xxxxxxxx  # 粘贴你的 API Key
 ```
 
 ---

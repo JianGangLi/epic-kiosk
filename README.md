@@ -71,7 +71,7 @@ cp .env.example .env
 方式二：直接修改 `docker-compose.yml`
 
 ```yaml
-- AI-API-KEY=sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+- AI_API_KEY=sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ```
 
 **3. 启动**
