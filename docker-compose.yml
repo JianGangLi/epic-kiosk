@@ -82,7 +82,7 @@ services:
       - TZ=Asia/Shanghai
       - PYTHONUNBUFFERED=1
       - ENABLE_APSCHEDULER=false
-      - API_PROVIDER=${API_PROVIDER:siliconflow} # API 提供商
+      - API_PROVIDER=${API_PROVIDER:-siliconflow} # API 提供商
       - AI_BASE_URL=${AI_BASE_URL:https://api.siliconflow.cn/v1 } # API 提供商
       # ============================================================
       # ⚠️⚠️⚠️ 必须配置 API Key ⚠️⚠️⚠️
@@ -103,6 +103,7 @@ services:
       # 模型配置（已优化验证码识别能力）
       # 主模型: Qwen2.5-VL-32B-Instruct (性价比高，速度快)
       # 备用模型: Qwen2.5-VL-72B-Instruct (能力更强)
+
       
       - CAPTCHA_MODEL=${CAPTCHA_MODEL:Qwen/Qwen2.5-VL-32B-Instruct} # 图形验证码模型
       - CAPTCHA_MODEL_FALLBACK=${CAPTCHA_MODEL_FALLBACK:Qwen/Qwen2.5-VL-72B-Instruct } # 图形验证码模型（备用）
