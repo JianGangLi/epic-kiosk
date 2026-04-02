@@ -172,8 +172,8 @@ def _apply_siliconflow_patch():
             api_key = str(settings.AI_API_KEY)
 
         base_url = settings.AI_BASE_URL.rstrip('/')
-        if base_url.endswith('/v1'):
-            base_url = base_url[:-3]
+        # if base_url.endswith('/v1'):
+        #     base_url = base_url[:-3]
 
         logger.info(f"🚀 SiliconFlow 补丁加载中... | 地址: {base_url}")
 
@@ -322,7 +322,7 @@ def _apply_siliconflow_patch():
             调用 SiliconFlow OpenAI 兼容 API
             注意：不使用 response_format，因为视觉模型不支持
             """
-            url = f"{base_url}/v1/chat/completions"
+            url = f"{base_url}/chat/completions"
 
             headers = {
                 "Content-Type": "application/json",
