@@ -138,11 +138,17 @@ async def deploy():
     )
 
     # Execute an immediate collection task
-    result = await execute_browser_tasks(headless=headless)
+    try:
+        result = await execute_browser_tasks(headless=headless)
+    except Exception as e:
+        logger.error(f"Exception during browser tasks: {e}")
+        result = None
 
     # 如果任务失败，输出最终错误类型（便于 worker.py 解析）
-    if result != ErrorType.SUCCESS:
+    if result is not None and result != ErrorType.SUCCESS:
         logger.error(f"❌ FINAL_ERROR:{result.value}")
+    elif result is None:
+        logger.error("❌ FINAL_ERROR:UNKNOWN")
 
     # Skip scheduler setup if disabled in configuration
     if not settings.ENABLE_APSCHEDULER:

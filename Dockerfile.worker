@@ -69,6 +69,8 @@ RUN playwright install firefox
 COPY . .
 
 ENV CAMOUFOX_CACHE_DIR=/camoufox
+# Set GitHub token to avoid rate limits
+
 # 预装 Camoufox 浏览器
 RUN python3 -c "from camoufox.sync_api import Camoufox; Camoufox(headless=True).__enter__().__exit__(None, None, None)" || true
 
