@@ -37,7 +37,7 @@ class EpicSettings(AgentConfig):
     model_config = SettingsConfigDict(env_file=".env", env_ignore_empty=True, extra="ignore")
 
     # [基础配置] SiliconFlow API Key
-    AIAPIKEY: SecretStr | None = Field(
+    AI_API_KEY: SecretStr | None = Field(
         default_factory=lambda: os.getenv("AI_API_KEY"),
         description="SiliconFlow API Key",
     )
