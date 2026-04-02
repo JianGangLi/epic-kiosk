@@ -1,20 +1,32 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Epic 自动驾驶</title>
+    <title>Epic 自动入库</title>
     <!-- Favicon - 多尺寸支持 -->
-    <link rel="icon" type="image/png" sizes="32x32" href="https://static-assets-prod.unrealengine.com/account-portal/static/epic-favicon-96x96.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="https://static-assets-prod.unrealengine.com/account-portal/static/epic-favicon-96x96.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="https://static-assets-prod.unrealengine.com/account-portal/static/epic_logo.png">
+    <link rel="icon" type="image/png" sizes="32x32"
+        href="https://static-assets-prod.unrealengine.com/account-portal/static/epic-favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16"
+        href="https://static-assets-prod.unrealengine.com/account-portal/static/epic-favicon-96x96.png">
+    <link rel="apple-touch-icon" sizes="180x180"
+        href="https://static-assets-prod.unrealengine.com/account-portal/static/epic_logo.png">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;600;800&display=swap');
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        html, body { height: 100%; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            height: 100%;
+        }
 
         body {
             font-family: 'Inter', sans-serif;
@@ -64,16 +76,44 @@
             background: #000;
             border: 1px solid #333;
         }
+
         .terminal-text {
             color: #4ade80;
             text-shadow: 0 0 5px rgba(74, 222, 128, 0.5);
         }
 
-        .fade-in { animation: fadeIn 0.4s ease-out forwards; opacity: 0; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        .fade-in {
+            animation: fadeIn 0.4s ease-out forwards;
+            opacity: 0;
+        }
 
-        .modal-enter { animation: modalIn 0.25s ease-out forwards; }
-        @keyframes modalIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-enter {
+            animation: modalIn 0.25s ease-out forwards;
+        }
+
+        @keyframes modalIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
 
         #toast-container {
             position: fixed;
@@ -98,13 +138,53 @@
             max-width: 360px;
         }
 
-        @keyframes toastIn { from { opacity: 0; transform: translateX(80px); } to { opacity: 1; transform: translateX(0); } }
-        .toast.hiding { animation: toastOut 0.25s ease-out forwards; }
-        @keyframes toastOut { from { opacity: 1; transform: translateX(0); } to { opacity: 0; transform: translateX(80px); } }
-        .toast-success { background: linear-gradient(135deg, #059669, #10b981); color: white; }
-        .toast-error { background: linear-gradient(135deg, #dc2626, #ef4444); color: white; }
-        .toast-warning { background: linear-gradient(135deg, #d97706, #f59e0b); color: white; }
-        .toast-info { background: linear-gradient(135deg, #2563eb, #3b82f6); color: white; }
+        @keyframes toastIn {
+            from {
+                opacity: 0;
+                transform: translateX(80px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .toast.hiding {
+            animation: toastOut 0.25s ease-out forwards;
+        }
+
+        @keyframes toastOut {
+            from {
+                opacity: 1;
+                transform: translateX(0);
+            }
+
+            to {
+                opacity: 0;
+                transform: translateX(80px);
+            }
+        }
+
+        .toast-success {
+            background: linear-gradient(135deg, #059669, #10b981);
+            color: white;
+        }
+
+        .toast-error {
+            background: linear-gradient(135deg, #dc2626, #ef4444);
+            color: white;
+        }
+
+        .toast-warning {
+            background: linear-gradient(135deg, #d97706, #f59e0b);
+            color: white;
+        }
+
+        .toast-info {
+            background: linear-gradient(135deg, #2563eb, #3b82f6);
+            color: white;
+        }
 
         .skeleton {
             background: linear-gradient(90deg, #1e293b 25%, #334155 50%, #1e293b 75%);
@@ -112,7 +192,16 @@
             animation: shimmer 1.5s infinite;
             border-radius: 8px;
         }
-        @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+        @keyframes shimmer {
+            0% {
+                background-position: 200% 0;
+            }
+
+            100% {
+                background-position: -200% 0;
+            }
+        }
 
         /* 统计卡片 - 更紧凑的横向布局 */
         .stats-bar {
@@ -121,6 +210,7 @@
             justify-content: center;
             flex-wrap: wrap;
         }
+
         .stat-item {
             display: flex;
             align-items: center;
@@ -131,7 +221,12 @@
             border-radius: 14px;
             transition: all 0.2s;
         }
-        .stat-item:hover { border-color: rgba(59, 130, 246, 0.3); transform: translateY(-2px); }
+
+        .stat-item:hover {
+            border-color: rgba(59, 130, 246, 0.3);
+            transform: translateY(-2px);
+        }
+
         .stat-icon {
             width: 44px;
             height: 44px;
@@ -140,8 +235,17 @@
             align-items: center;
             justify-content: center;
         }
-        .stat-label { font-size: 14px; color: #94a3b8; white-space: nowrap; }
-        .stat-value { font-size: 24px; font-weight: 700; }
+
+        .stat-label {
+            font-size: 14px;
+            color: #94a3b8;
+            white-space: nowrap;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+        }
 
         .announcement-bar {
             background: linear-gradient(90deg, rgba(59, 130, 246, 0.15), rgba(139, 92, 246, 0.15));
@@ -153,10 +257,12 @@
             overflow: hidden;
             transition: all 0.3s;
         }
+
         .free-game-card:hover {
             transform: translateY(-8px);
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
         }
+
         .free-game-card::before {
             content: 'FREE';
             position: absolute;
@@ -181,6 +287,7 @@
             cursor: pointer;
             transition: all 0.2s;
         }
+
         .custom-checkbox:checked {
             background: #3b82f6;
             border-color: #3b82f6;
@@ -196,7 +303,10 @@
             display: flex;
             flex-direction: column;
         }
-        .tab-content { width: 100%; }
+
+        .tab-content {
+            width: 100%;
+        }
 
         /* ===== PC 端：工作区居中布局 (≥768px) ===== */
         @media (min-width: 768px) {
@@ -214,24 +324,29 @@
             .main-content {
                 padding: 0 1rem;
             }
+
             .tab-content-centered {
                 width: 100%;
                 padding: 1rem 0;
             }
+
             .work-area-container {
                 flex-direction: column !important;
                 align-items: stretch !important;
                 justify-content: flex-start !important;
                 gap: 1rem !important;
             }
+
             .work-panel-wrapper {
                 width: 100% !important;
             }
+
             .work-panel {
                 width: 100% !important;
                 max-width: 100% !important;
                 padding: 1.5rem !important;
             }
+
             /* 移动端日志面板：默认隐藏，使用 max-height 控制 */
             .status-panel-wrapper {
                 transform: translateY(20px) !important;
@@ -240,27 +355,33 @@
                 opacity: 0 !important;
                 overflow: hidden !important;
             }
+
             .status-panel-wrapper.is-visible {
                 transform: translateY(0) !important;
                 width: 100% !important;
                 max-height: 500px !important;
                 opacity: 1 !important;
             }
+
             .status-panel {
                 width: 100% !important;
                 max-width: 100% !important;
                 max-height: 40vh !important;
             }
+
             .stat-item {
                 padding: 0.75rem 1rem;
             }
+
             .stat-icon {
                 width: 36px;
                 height: 36px;
             }
+
             .stat-value {
                 font-size: 18px;
             }
+
             footer {
                 display: none;
             }
@@ -283,6 +404,7 @@
             gap: 0;
             transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
         }
+
         .work-area-container.is-working {
             justify-content: space-between;
             gap: 2rem;
@@ -292,12 +414,14 @@
         .work-panel-wrapper {
             transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
         }
+
         .work-panel {
             padding: 2.5rem;
             border-radius: 20px;
             width: 480px;
             max-width: 90vw;
         }
+
         .work-area-container.is-working .work-panel-wrapper {
             flex-shrink: 0;
         }
@@ -310,12 +434,14 @@
             overflow: hidden;
             transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
         }
+
         .status-panel-wrapper.is-visible {
             opacity: 1;
             transform: translateX(0);
             width: 480px;
             flex-shrink: 0;
         }
+
         .status-panel {
             padding: 1.5rem;
             border-radius: 20px;
@@ -325,14 +451,28 @@
         }
 
         /* 游戏卡片网格 - 更大的封面 */
-        .games-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1.5rem; width: 100%; }
-        .free-games-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 2rem; width: 100%; max-width: 1100px; margin: 0 auto; }
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1.5rem;
+            width: 100%;
+        }
+
+        .free-games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 2rem;
+            width: 100%;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
 
         .work-input {
             padding: 1rem 1.25rem;
             border-radius: 12px;
             font-size: 16px;
         }
+
         .work-btn {
             padding: 1rem 1.5rem;
             border-radius: 12px;
@@ -348,14 +488,17 @@
             font-weight: 600;
             transition: all 0.2s;
         }
+
         .tab-btn-active {
             background: linear-gradient(135deg, #3b82f6, #2563eb);
             color: white;
             box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
         }
+
         .tab-btn-inactive {
             color: #94a3b8;
         }
+
         .tab-btn-inactive:hover {
             color: white;
             background: rgba(255, 255, 255, 0.1);
@@ -367,17 +510,41 @@
             height: 28px;
             transition: all 0.2s;
         }
+
         .footer-icon:hover {
             transform: scale(1.2);
         }
 
         /* Tailwind CSS 加载前的 SVG 尺寸预设，防止闪烁 */
-        svg.w-4.h-4 { width: 16px !important; height: 16px !important; }
-        svg.w-6.h-6 { width: 24px !important; height: 24px !important; }
-        svg.w-7.h-7 { width: 28px !important; height: 28px !important; }
-        svg.w-8.h-8 { width: 32px !important; height: 32px !important; }
-        .w-12.h-12 { width: 48px !important; height: 48px !important; }
-        .stat-icon { width: 44px !important; height: 44px !important; }
+        svg.w-4.h-4 {
+            width: 16px !important;
+            height: 16px !important;
+        }
+
+        svg.w-6.h-6 {
+            width: 24px !important;
+            height: 24px !important;
+        }
+
+        svg.w-7.h-7 {
+            width: 28px !important;
+            height: 28px !important;
+        }
+
+        svg.w-8.h-8 {
+            width: 32px !important;
+            height: 32px !important;
+        }
+
+        .w-12.h-12 {
+            width: 48px !important;
+            height: 48px !important;
+        }
+
+        .stat-icon {
+            width: 44px !important;
+            height: 44px !important;
+        }
 
         /* 页面加载遮罩 - 防止内容闪烁 */
         #page-loader {
@@ -390,10 +557,12 @@
             z-index: 99999;
             transition: opacity 0.3s ease-out;
         }
+
         #page-loader.fade-out {
             opacity: 0;
             pointer-events: none;
         }
+
         #page-loader .spinner {
             width: 40px;
             height: 40px;
@@ -402,47 +571,52 @@
             border-radius: 50%;
             animation: spin 0.8s linear infinite;
         }
-        @keyframes spin { to { transform: rotate(360deg); } }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
     </style>
 </head>
+
 <body>
     <!-- 页面加载遮罩 -->
-    <div id="page-loader"><div class="spinner"></div></div>
+    <div id="page-loader">
+        <div class="spinner"></div>
+    </div>
 
     <canvas id="particles-canvas"></canvas>
     <div id="toast-container"></div>
 
-    <!-- 顶部公告栏 - 可手动关闭 -->
-    <div id="announcement-bar" class="announcement-bar py-3 px-4 text-center text-sm relative">
-        <div class="flex items-center justify-center gap-2 flex-wrap pr-8">
-            <span>📢</span>
-            <span class="text-blue-200">欢迎大家使用 Epic 自动驾驶！有问题欢迎关注我的 B 站频道：
-                <a href="https://space.bilibili.com/59438380" target="_blank" class="text-blue-400 hover:text-blue-300 font-semibold hover:underline">一万AI分享</a>
-                ，获取更多教程和更新动态
-            </span>
-        </div>
-        <button onclick="closeAnnouncement()" class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white transition-colors text-lg" title="关闭公告">✕</button>
-    </div>
 
     <div class="content-wrapper p-4 md:p-6">
 
         <!-- 头部 -->
-        <div class="w-full flex flex-col md:flex-row justify-between items-center mb-5 fade-in gap-4" style="animation-delay: 0.1s;">
+        <div class="w-full flex flex-col md:flex-row justify-between items-center mb-5 fade-in gap-4"
+            style="animation-delay: 0.1s;">
             <div class="flex items-center gap-4">
-                <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/30" style="width:48px;height:48px;flex-shrink:0">
-                    <svg class="w-7 h-7 text-white" style="width:28px;height:28px;flex-shrink:0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/30"
+                    style="width:48px;height:48px;flex-shrink:0">
+                    <svg class="w-7 h-7 text-white" style="width:28px;height:28px;flex-shrink:0" fill="none"
+                        stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                    </svg>
                 </div>
                 <div>
-                    <h1 class="text-2xl font-black tracking-tight text-white">Epic <span class="text-blue-400">自动驾驶</span></h1>
+                    <h1 class="text-2xl font-black tracking-tight text-white">Epic <span
+                            class="text-blue-400">自动入库</span></h1>
                     <p class="text-xs text-gray-400 font-mono tracking-widest uppercase">Automated Asset Management</p>
                 </div>
             </div>
 
             <!-- 更大更醒目的 Tab 按钮 -->
             <div class="bg-slate-800/60 p-1 rounded-full border border-white/10 flex backdrop-blur-md gap-1">
-                <button onclick="switchTab('deposit')" id="tab-deposit" class="tab-btn tab-btn-active">自动驾驶</button>
+                <button onclick="switchTab('deposit')" id="tab-deposit" class="tab-btn tab-btn-active">自动入库</button>
                 <button onclick="switchTab('query')" id="tab-query" class="tab-btn tab-btn-inactive">资产清单</button>
-                <button onclick="switchTab('free-games')" id="tab-free-games" class="tab-btn tab-btn-inactive">免费游戏</button>
+                <button onclick="switchTab('free-games')" id="tab-free-games"
+                    class="tab-btn tab-btn-inactive">免费游戏</button>
             </div>
         </div>
 
@@ -451,7 +625,12 @@
             <div class="stats-bar flex-wrap justify-center md:justify-start">
                 <div class="stat-item">
                     <div class="stat-icon bg-blue-500/20" style="width:44px;height:44px;flex-shrink:0">
-                        <svg class="w-6 h-6 text-blue-400" style="width:24px;height:24px;flex-shrink:0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                        <svg class="w-6 h-6 text-blue-400" style="width:24px;height:24px;flex-shrink:0" fill="none"
+                            stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z">
+                            </path>
+                        </svg>
                     </div>
                     <div>
                         <p class="stat-label">托管账号</p>
@@ -460,7 +639,11 @@
                 </div>
                 <div class="stat-item">
                     <div class="stat-icon bg-green-500/20" style="width:44px;height:44px;flex-shrink:0">
-                        <svg class="w-6 h-6 text-green-400" style="width:24px;height:24px;flex-shrink:0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <svg class="w-6 h-6 text-green-400" style="width:24px;height:24px;flex-shrink:0" fill="none"
+                            stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
                     </div>
                     <div>
                         <p class="stat-label">今日领取</p>
@@ -469,7 +652,11 @@
                 </div>
                 <div class="stat-item">
                     <div class="stat-icon bg-purple-500/20" style="width:44px;height:44px;flex-shrink:0">
-                        <svg class="w-6 h-6 text-purple-400" style="width:24px;height:24px;flex-shrink:0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
+                        <svg class="w-6 h-6 text-purple-400" style="width:24px;height:24px;flex-shrink:0" fill="none"
+                            stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                        </svg>
                     </div>
                     <div>
                         <p class="stat-label">累计领取</p>
@@ -478,7 +665,11 @@
                 </div>
                 <div class="stat-item">
                     <div class="stat-icon bg-amber-500/20" style="width:44px;height:44px;flex-shrink:0">
-                        <svg class="w-6 h-6 text-amber-400" style="width:24px;height:24px;flex-shrink:0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <svg class="w-6 h-6 text-amber-400" style="width:24px;height:24px;flex-shrink:0" fill="none"
+                            stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
                     </div>
                     <div>
                         <p class="stat-label">队列任务</p>
@@ -491,33 +682,41 @@
         <!-- 主内容区域 -->
         <div class="main-content">
 
-            <!-- 自动驾驶 Tab -->
+            <!-- 自动入库 Tab -->
             <div id="view-deposit" class="tab-content-centered fade-in" style="animation-delay: 0.15s;">
                 <div id="work-area-container" class="work-area-container">
                     <!-- 左侧：工作面板 -->
                     <div class="work-panel-wrapper">
                         <div class="work-panel glass-panel">
-                            <h2 class="text-2xl font-bold text-white mb-6 text-center">Epic 自动驾驶</h2>
+                            <h2 class="text-2xl font-bold text-white mb-6 text-center">Epic 自动入库</h2>
 
-                            <div class="bg-amber-500/10 border border-amber-500/25 rounded-xl p-4 mb-6 text-sm text-amber-100/90">
+                            <div
+                                class="bg-amber-500/10 border border-amber-500/25 rounded-xl p-4 mb-6 text-sm text-amber-100/90">
                                 <div class="flex items-start gap-3">
                                     <span class="text-xl">⚠️</span>
                                     <ul class="space-y-2 list-disc list-inside">
                                         <li>建议使用新账号：
-                                            <a href="https://www.epicgames.com/id/register" target="_blank" class="text-amber-400 hover:text-amber-300 font-semibold hover:underline">注册 →</a>
+                                            <a href="https://www.epicgames.com/id/register" target="_blank"
+                                                class="text-amber-400 hover:text-amber-300 font-semibold hover:underline">注册
+                                                →</a>
                                         </li>
                                         <li>必须关闭两步验证 (2FA)：
-                                            <a href="https://www.epicgames.com/account/password" target="_blank" class="text-amber-400 hover:text-amber-300 font-semibold hover:underline">关闭 →</a>
+                                            <a href="https://www.epicgames.com/account/password" target="_blank"
+                                                class="text-amber-400 hover:text-amber-300 font-semibold hover:underline">关闭
+                                                →</a>
                                         </li>
                                     </ul>
                                 </div>
                             </div>
 
                             <div id="deposit-form" class="space-y-5">
-                                <input type="email" id="d_email" placeholder="Epic Email" class="w-full bg-slate-900/60 border border-slate-600 text-white work-input focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all">
+                                <input type="email" id="d_email" placeholder="Epic Email"
+                                    class="w-full bg-slate-900/60 border border-slate-600 text-white work-input focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all">
                                 <div class="relative">
-                                    <input type="password" id="d_password" placeholder="Password" class="w-full bg-slate-900/60 border border-slate-600 text-white work-input focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all pr-12">
-                                    <button onclick="togglePwd('d_password', this)" class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-200 text-lg">👁️</button>
+                                    <input type="password" id="d_password" placeholder="Password"
+                                        class="w-full bg-slate-900/60 border border-slate-600 text-white work-input focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all pr-12">
+                                    <button onclick="togglePwd('d_password', this)"
+                                        class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-200 text-lg">👁️</button>
                                 </div>
 
                                 <div class="flex items-center gap-3 text-sm text-slate-400">
@@ -525,12 +724,14 @@
                                     <label for="remember_email" class="cursor-pointer">记住邮箱</label>
                                 </div>
 
-                                <button onclick="startVerify()" id="btn-deposit" class="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-bold work-btn shadow-lg shadow-blue-500/30 transition-all flex items-center justify-center gap-2">
+                                <button onclick="startVerify()" id="btn-deposit"
+                                    class="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-bold work-btn shadow-lg shadow-blue-500/30 transition-all flex items-center justify-center gap-2">
                                     <span class="text-xl">🚀</span>
                                     <span>启动引擎</span>
                                 </button>
 
-                                <button onclick="deleteAccount()" id="btn-delete" class="w-full bg-transparent border border-red-800/50 text-red-400 hover:bg-red-900/20 hover:border-red-500 hover:text-red-300 font-semibold py-3 rounded-xl transition-all">
+                                <button onclick="deleteAccount()" id="btn-delete"
+                                    class="w-full bg-transparent border border-red-800/50 text-red-400 hover:bg-red-900/20 hover:border-red-500 hover:text-red-300 font-semibold py-3 rounded-xl transition-all">
                                     停止托管 / 删除账号
                                 </button>
                             </div>
@@ -545,10 +746,13 @@
                                     <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
                                     SYSTEM LOGS
                                 </span>
-                                <button onclick="document.getElementById('status-log').innerText='_ Ready.'" class="text-xs text-slate-600 hover:text-slate-400">CLEAR</button>
+                                <button onclick="document.getElementById('status-log').innerText='_ Ready.'"
+                                    class="text-xs text-slate-600 hover:text-slate-400">CLEAR</button>
                             </div>
-                            <div class="terminal rounded-xl p-4 flex-1 overflow-y-auto flex flex-col-reverse border border-slate-700/50 min-h-[300px]">
-                                <div id="status-log" class="terminal-text text-sm leading-relaxed whitespace-pre-wrap">_ Ready.</div>
+                            <div
+                                class="terminal rounded-xl p-4 flex-1 overflow-y-auto flex flex-col-reverse border border-slate-700/50 min-h-[300px]">
+                                <div id="status-log" class="terminal-text text-sm leading-relaxed whitespace-pre-wrap">_
+                                    Ready.</div>
                             </div>
                         </div>
                     </div>
@@ -558,8 +762,10 @@
             <!-- 资产清单 Tab -->
             <div id="view-query" class="tab-content tab-content-scroll hidden">
                 <div class="flex gap-3 mb-6 glass-panel p-3 rounded-xl max-w-xl mx-auto">
-                    <input type="email" id="q_email" placeholder="输入邮箱查询资产..." class="flex-1 bg-transparent border-none text-white px-4 py-2.5 focus:ring-0 text-base">
-                    <button onclick="doQuery()" id="btn-query" class="bg-slate-700 hover:bg-slate-600 text-white px-6 rounded-lg font-bold transition-all">检索</button>
+                    <input type="email" id="q_email" placeholder="输入邮箱查询资产..."
+                        class="flex-1 bg-transparent border-none text-white px-4 py-2.5 focus:ring-0 text-base">
+                    <button onclick="doQuery()" id="btn-query"
+                        class="bg-slate-700 hover:bg-slate-600 text-white px-6 rounded-lg font-bold transition-all">检索</button>
                 </div>
 
                 <div id="skeleton-grid" class="hidden games-grid max-w-4xl mx-auto">
@@ -597,26 +803,33 @@
                 <div id="free-games-empty" class="hidden text-center py-16 text-slate-500">
                     <p class="text-lg mb-2">暂无免费游戏</p>
                     <p class="text-sm">每周四晚上 11 点 Epic 会更新免费游戏</p>
-                    <a href="https://store.epicgames.com/zh-CN/free-games" target="_blank" class="inline-block mt-4 text-blue-400 hover:text-blue-300 text-base">前往 Epic 官网查看 →</a>
+                    <a href="https://store.epicgames.com/zh-CN/free-games" target="_blank"
+                        class="inline-block mt-4 text-blue-400 hover:text-blue-300 text-base">前往 Epic 官网查看 →</a>
                 </div>
             </div>
         </div>
 
         <!-- 成功弹窗 -->
-        <div id="success-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm hidden">
-            <div class="bg-slate-900 border border-slate-700 p-6 rounded-2xl shadow-2xl max-w-md w-full text-center modal-enter relative mx-4">
+        <div id="success-modal"
+            class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm hidden">
+            <div
+                class="bg-slate-900 border border-slate-700 p-6 rounded-2xl shadow-2xl max-w-md w-full text-center modal-enter relative mx-4">
                 <div class="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <svg class="w-8 h-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                    <svg class="w-8 h-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
                 </div>
                 <h3 class="text-xl font-bold text-white mb-2">领取成功!</h3>
-                <p class="text-slate-400 text-sm mb-4">Epic 自动驾驶已完成任务。</p>
+                <p class="text-slate-400 text-sm mb-4">Epic 自动入库已完成任务。</p>
                 <div class="bg-slate-800 rounded-xl p-4 mb-4">
                     <p class="text-xs text-slate-500 uppercase">New Asset Acquired</p>
                     <p id="modal-game-name" class="text-lg font-bold text-blue-400 mt-1">Unknown Game</p>
                 </div>
                 <div class="flex flex-col gap-3">
-                    <a id="modal-game-link" href="https://store.epicgames.com/" target="_blank" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-xl transition-all">前往查看</a>
-                    <button onclick="closeModal()" class="w-full bg-transparent border border-slate-700 hover:bg-slate-800 text-slate-400 font-bold py-3 rounded-xl transition-all">关闭</button>
+                    <a id="modal-game-link" href="https://store.epicgames.com/" target="_blank"
+                        class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-xl transition-all">前往查看</a>
+                    <button onclick="closeModal()"
+                        class="w-full bg-transparent border border-slate-700 hover:bg-slate-800 text-slate-400 font-bold py-3 rounded-xl transition-all">关闭</button>
                 </div>
             </div>
         </div>
@@ -625,9 +838,12 @@
              🔥 错误提示弹窗
              用于显示需要用户手动操作的错误（如 EULA 失败）
              ============================================================ -->
-        <div id="error-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm hidden">
-            <div class="bg-slate-900 border border-slate-700 p-6 rounded-2xl shadow-2xl max-w-md w-full text-center modal-enter relative mx-4">
-                <div id="error-modal-icon" class="w-16 h-16 bg-amber-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
+        <div id="error-modal"
+            class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm hidden">
+            <div
+                class="bg-slate-900 border border-slate-700 p-6 rounded-2xl shadow-2xl max-w-md w-full text-center modal-enter relative mx-4">
+                <div id="error-modal-icon"
+                    class="w-16 h-16 bg-amber-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
                     <span class="text-3xl">⚠️</span>
                 </div>
                 <h3 id="error-modal-title" class="text-xl font-bold text-white mb-2">需要您帮忙操作一下</h3>
@@ -638,18 +854,24 @@
                     <div id="error-modal-steps" class="mt-4 space-y-3 text-sm text-slate-300">
                         <p class="font-semibold text-white">请按以下步骤操作：</p>
                         <ol class="list-decimal list-inside space-y-2">
-                            <li>打开 <a href="https://www.epicgames.com" target="_blank" class="text-blue-400 hover:text-blue-300 underline">Epic 官网</a> 并登录</li>
+                            <li>打开 <a href="https://www.epicgames.com" target="_blank"
+                                    class="text-blue-400 hover:text-blue-300 underline">Epic 官网</a> 并登录</li>
                             <li>如果看到"服务协议"或"EULA"页面，点击"接受"按钮</li>
                             <li>完成后回来重新点击"托管"按钮</li>
                         </ol>
                     </div>
                 </div>
                 <div class="flex flex-col gap-3">
-                    <a href="https://www.epicgames.com" target="_blank" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-xl transition-all flex items-center justify-center gap-2">
+                    <a href="https://www.epicgames.com" target="_blank"
+                        class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-xl transition-all flex items-center justify-center gap-2">
                         <span>前往 Epic 官网</span>
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                        </svg>
                     </a>
-                    <button onclick="closeErrorModal()" class="w-full bg-transparent border border-slate-700 hover:bg-slate-800 text-slate-400 font-bold py-3 rounded-xl transition-all">我知道了</button>
+                    <button onclick="closeErrorModal()"
+                        class="w-full bg-transparent border border-slate-700 hover:bg-slate-800 text-slate-400 font-bold py-3 rounded-xl transition-all">我知道了</button>
                 </div>
             </div>
         </div>
@@ -658,16 +880,41 @@
         <footer class="w-full mt-8 pt-5 border-t border-slate-800 fade-in" style="animation-delay: 0.2s;">
             <div class="flex flex-col md:flex-row justify-between items-center gap-4">
                 <div class="text-center md:text-left">
-                    <a href="https://github.com/10000ge10000/epic-kiosk" target="_blank" class="flex items-center gap-2 text-sm text-slate-400 hover:text-white transition-colors">
-                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                    <a href="https://github.com/10000ge10000/epic-kiosk" target="_blank"
+                        class="flex items-center gap-2 text-sm text-slate-400 hover:text-white transition-colors">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                            <path
+                                d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
+                        </svg>
                         <span>10000ge10000/epic-kiosk</span>
                     </a>
                 </div>
                 <div class="flex items-center gap-5">
-                    <a href="https://space.bilibili.com/59438380" target="_blank" class="text-slate-500 hover:text-blue-400 transition-colors" title="Bilibili"><svg class="footer-icon" fill="currentColor" viewBox="0 0 24 24"><path d="M17.813 4.653h.854c1.51.054 2.769.578 3.773 1.574 1.004.995 1.524 2.249 1.56 3.758v6.844c-.036 1.51-.556 2.769-1.56 3.773-1.004.996-2.264 1.52-3.773 1.574h-12.714c-1.51-.054-2.769-.578-3.773-1.574-1.004-.995-1.524-2.249-1.56-3.758v-6.844c.036-1.51.556-2.769 1.56-3.773 1.004-.996 2.264-1.52 3.773-1.574h.776l-1.175-1.12a.9.9 0 0 1-.272-.649c0-.271.095-.504.285-.698.19-.194.425-.291.704-.291.278 0 .515.097.71.291l1.896 1.796h5.812l1.896-1.796c.195-.194.432-.291.711-.291.279 0 .514.097.704.291.19.194.285.427.285.698 0 .271-.091.488-.272.649l-1.175 1.12zm-12.876 2.227c-.896.031-1.642.344-2.234.936-.593.593-.902 1.334-.928 2.222v6.864c.026.889.335 1.629.928 2.222.592.593 1.338.905 2.234.936h13.068c.896-.031 1.642-.344 2.234-.936.593-.593.902-1.334.928-2.222v-6.864c-.026-.889-.335-1.629-.928-2.222-.592-.593-1.338-.905-2.234-.936h-13.068z"/></svg></a>
-                    <a href="https://www.youtube.com/channel/UCqgvZnCN9-9pZcL4SWxmnDw" target="_blank" class="text-slate-500 hover:text-red-500 transition-colors" title="YouTube"><svg class="footer-icon" fill="currentColor" viewBox="0 0 24 24"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg></a>
-                    <a href="https://github.com/10000ge10000" target="_blank" class="text-slate-500 hover:text-white transition-colors" title="GitHub"><svg class="footer-icon" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg></a>
-                    <a href="https://blog.910501.xyz/" target="_blank" class="text-slate-500 hover:text-emerald-400 transition-colors" title="Blog"><svg class="footer-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg></a>
+                    <a href="https://space.bilibili.com/59438380" target="_blank"
+                        class="text-slate-500 hover:text-blue-400 transition-colors" title="Bilibili"><svg
+                            class="footer-icon" fill="currentColor" viewBox="0 0 24 24">
+                            <path
+                                d="M17.813 4.653h.854c1.51.054 2.769.578 3.773 1.574 1.004.995 1.524 2.249 1.56 3.758v6.844c-.036 1.51-.556 2.769-1.56 3.773-1.004.996-2.264 1.52-3.773 1.574h-12.714c-1.51-.054-2.769-.578-3.773-1.574-1.004-.995-1.524-2.249-1.56-3.758v-6.844c.036-1.51.556-2.769 1.56-3.773 1.004-.996 2.264-1.52 3.773-1.574h.776l-1.175-1.12a.9.9 0 0 1-.272-.649c0-.271.095-.504.285-.698.19-.194.425-.291.704-.291.278 0 .515.097.71.291l1.896 1.796h5.812l1.896-1.796c.195-.194.432-.291.711-.291.279 0 .514.097.704.291.19.194.285.427.285.698 0 .271-.091.488-.272.649l-1.175 1.12zm-12.876 2.227c-.896.031-1.642.344-2.234.936-.593.593-.902 1.334-.928 2.222v6.864c.026.889.335 1.629.928 2.222.592.593 1.338.905 2.234.936h13.068c.896-.031 1.642-.344 2.234-.936.593-.593.902-1.334.928-2.222v-6.864c-.026-.889-.335-1.629-.928-2.222-.592-.593-1.338-.905-2.234-.936h-13.068z" />
+                        </svg></a>
+                    <a href="https://www.youtube.com/channel/UCqgvZnCN9-9pZcL4SWxmnDw" target="_blank"
+                        class="text-slate-500 hover:text-red-500 transition-colors" title="YouTube"><svg
+                            class="footer-icon" fill="currentColor" viewBox="0 0 24 24">
+                            <path
+                                d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z" />
+                        </svg></a>
+                    <a href="https://github.com/10000ge10000" target="_blank"
+                        class="text-slate-500 hover:text-white transition-colors" title="GitHub"><svg
+                            class="footer-icon" fill="currentColor" viewBox="0 0 24 24">
+                            <path
+                                d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
+                        </svg></a>
+                    <a href="https://blog.910501.xyz/" target="_blank"
+                        class="text-slate-500 hover:text-emerald-400 transition-colors" title="Blog"><svg
+                            class="footer-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253">
+                            </path>
+                        </svg></a>
                 </div>
             </div>
         </footer>
@@ -819,7 +1066,7 @@
 
         function togglePwd(id, btn) { const el = document.getElementById(id); el.type = el.type === "password" ? "text" : "password"; btn.innerText = el.type === "password" ? "👁️" : "🔒"; }
 
-        // 自动驾驶
+        // 自动入库
         let pollTimer;
         async function startVerify() {
             const email = document.getElementById('d_email').value, password = document.getElementById('d_password').value;
@@ -894,7 +1141,7 @@
                     showToast('任务失败', 'error');
                     resetUI();
                 }
-            } catch (e) {}
+            } catch (e) { }
         }
 
         function resetUI() {
@@ -1050,4 +1297,5 @@
         {% endraw %}
     </script>
 </body>
+
 </html>
