@@ -39,7 +39,7 @@ RUN apt-get update && apt-get install -y \
 
 # ✅ Playwright 国内下载源
 ENV PLAYWRIGHT_DOWNLOAD_HOST=https://cdn.playwright.dev
-
+ENV PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
 # 安装 uv（会自动走 pip 国内源）
 RUN pip install --no-cache-dir uv -i https://pypi.tuna.tsinghua.edu.cn/simple
 
@@ -57,10 +57,16 @@ RUN uv pip install --system --no-cache \
     redis \
     requests \
     beautifulsoup4 \
-    lxml -i https://pypi.tuna.tsinghua.edu.cn/simple
+    lxml \
+    playwright -i https://pypi.tuna.tsinghua.edu.cn/simple
 
-# 安装 Playwright 浏览器
-RUN playwright install firefox && playwright install-deps firefox
+
+
+# ✅ 再下载浏览器（这一层可缓存）
+RUN playwright install firefox
+
+# ❗ 最后才 copy 代码
+COPY . .
 
 ENV CAMOUFOX_CACHE_DIR=/camoufox
 # 预装 Camoufox 浏览器
