@@ -37,8 +37,8 @@ class EpicSettings(AgentConfig):
     model_config = SettingsConfigDict(env_file=".env", env_ignore_empty=True, extra="ignore")
 
     # [基础配置] SiliconFlow API Key
-    SILICONFLOW_API_KEY: SecretStr | None = Field(
-        default_factory=lambda: os.getenv("SILICONFLOW_API_KEY"),
+    AI-API-KEY: SecretStr | None = Field(
+        default_factory=lambda: os.getenv("AI-API-KEY"),
         description="SiliconFlow API Key",
     )
 
@@ -49,8 +49,8 @@ class EpicSettings(AgentConfig):
     )
 
     # API 基础地址
-    SILICONFLOW_BASE_URL: str = Field(
-        default=os.getenv("SILICONFLOW_BASE_URL", "https://api.siliconflow.cn/v1"),
+    AI_BASE_URL: str = Field(
+        default=os.getenv("AI_BASE_URL", "https://api.siliconflow.cn/v1"),
         description="SiliconFlow API 基础地址",
     )
 
@@ -156,8 +156,8 @@ def _apply_siliconflow_patch():
     2. Qwen/Qwen2.5-VL-32B-Instruct (¥12/百万，延迟最低)
     3. Qwen/Qwen2.5-VL-72B-Instruct (¥40/百万，效果最好)
     """
-    if not settings.SILICONFLOW_API_KEY:
-        logger.warning("⚠️ 未配置 SILICONFLOW_API_KEY，请从 https://cloud.siliconflow.cn/ 获取 API Key")
+    if not settings.AI-API-KEY:
+        logger.warning("⚠️ 未配置 AI-API-KEY，请从 https://cloud.siliconflow.cn/ 获取 API Key")
         return
 
     try:
@@ -166,12 +166,12 @@ def _apply_siliconflow_patch():
         import httpx
 
         # 获取 API Key
-        if hasattr(settings.SILICONFLOW_API_KEY, 'get_secret_value'):
-            api_key = settings.SILICONFLOW_API_KEY.get_secret_value()
+        if hasattr(settings.AI-API-KEY, 'get_secret_value'):
+            api_key = settings.AI-API-KEY.get_secret_value()
         else:
-            api_key = str(settings.SILICONFLOW_API_KEY)
+            api_key = str(settings.AI-API-KEY)
 
-        base_url = settings.SILICONFLOW_BASE_URL.rstrip('/')
+        base_url = settings.AI_BASE_URL.rstrip('/')
         if base_url.endswith('/v1'):
             base_url = base_url[:-3]
 

@@ -71,7 +71,7 @@ cp .env.example .env
 方式二：直接修改 `docker-compose.yml`
 
 ```yaml
-- SILICONFLOW_API_KEY=sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+- AI-API-KEY=sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ```
 
 **3. 启动**
